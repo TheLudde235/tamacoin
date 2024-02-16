@@ -1,5 +1,5 @@
 import QrScanner from "./lib/nimiq-qrcode.js";
-import { qrCodes } from "./codes.js";
+import codes from "./codes.js";
 import coins from "./coinThings.js";
 
 const debugElement = document.querySelector("#debug");
@@ -13,27 +13,27 @@ function debug(text) {
     debugElement.appendChild(p);
 }
 
-const scannedCodes = JSON.parse(localStorage.getItem("")) || qrCodes;
-
-for (const key in scannedCodes) {
-    console.log(key);
-    coins.amount += scannedCodes[key];
+function handleScan(scanResult) {
+    const { data } = scanResult;
+    if (codes.has(data) && !codes.hasScanned(data)) {
+        debug(`Added ${data}`);
+        codes.scan(data);
+        coins.amount++;
+    }
 }
+window.handleScan = handleScan;
 
-const qrScanner = new QrScanner(
-    videoElement,
-    (res) => {
-        dataElement.textContent = `Output: ${res.data}`;
-        if (alreadyScannedCodes[res.data]) {
-            dataElement.textContent = `Output: ${res.data}`;
-            localStorage.setItem(res.data, "true");
-            coinsElement.textContent++;
-        }
-    },
-    { returnDetailedScanResult: true }
-);
+coins.amount = codes.populate();
+coinsElement.textContent = coins.amount;
+
+const qrScanner = new QrScanner(videoElement, handleScan, {
+    returnDetailedScanResult: true,
+});
 
 videoElement.insertAdjacentElement("afterend", qrScanner.$canvas);
 qrScanner.$canvas.style.display = "block";
+coins.onUpdate((value) => {
+    coinsElement.textContent = value;
+});
 
 qrScanner.start();

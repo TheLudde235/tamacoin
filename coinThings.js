@@ -1,19 +1,23 @@
-const id = "2d1fa35cb71";
+const id = "2d1fa35c";
+const callbacks = [];
 
-export default coins = {
-    amount: localStorage.getItem("coins") || 0,
-
+export default {
     get amount() {
-        return this.amount;
+        return localStorage.getItem(id);
     },
 
     /**
      * @param {number} value
      */
     set amount(value) {
-        this.amount = value;
-
-        localStorage.setItem("coins", this.amount);
+        localStorage.setItem(id, value);
+        callbacks.forEach((callback) => {
+            callback(value);
+        });
         return this.amount;
+    },
+
+    onUpdate(callback) {
+        callbacks.push(callback);
     },
 };
