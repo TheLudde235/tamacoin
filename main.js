@@ -21,6 +21,8 @@ function handleScan(scanResult) {
         coins.amount++;
     }
 }
+
+// This should be removed as soon as possible
 window.handleScan = handleScan;
 
 coins.amount = codes.populate();
@@ -32,6 +34,7 @@ const qrScanner = new QrScanner(videoElement, handleScan, {
 
 videoElement.insertAdjacentElement("afterend", qrScanner.$canvas);
 qrScanner.$canvas.style.display = "block";
+
 coins.onUpdate((value) => {
     coinsElement.textContent = value;
 });

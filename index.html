@@ -17,7 +17,9 @@
         <p id="data">Output:</p>
         <p id="coins">0</p>
         <div id="debug"></div>
-        <button onclick="localStorage.clear()">Clear Localstore</button>
+        <button onclick="localStorage.clear(); window.navigation.reload()">
+            Clear Localstore
+        </button>
         <input type="text" name="test" id="qr-data" value="da1aa9d1" />
         <button
             onclick="handleScan({data: document.querySelector('#qr-data').value})"
