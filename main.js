@@ -13,8 +13,25 @@ function debug(text) {
     debugElement.appendChild(p);
 }
 
+function celebrate(amount) {
+    debug(`Removed ${amount} coins!`);
+}
+
 function handleScan(scanResult) {
     const { data } = scanResult;
+
+    // Remove "X" amount of coins if scanned QR-code includes "delete" + X
+    // And current amount of coins exceeds amount to be removed
+    const match = data.matches(/delete[0-9]+/);
+    if (match != null) {
+        const amount = match[0].split("delete")[1];
+        if (Number(coins.amount) >= Number(amount)) {
+            console.log({ coinamount: coins.amount, amount });
+            coins.amount -= amount;
+            return celebrate(amount);
+        }
+    }
+
     if (codes.has(data) && !codes.hasScanned(data)) {
         debug(`Added ${data}`);
         codes.scan(data);
