@@ -22,7 +22,7 @@ function handleScan(scanResult) {
 
     // Remove "X" amount of coins if scanned QR-code includes "delete" + X
     // And current amount of coins exceeds amount to be removed
-    const match = data.matches(/delete[0-9]+/);
+    const match = data.match(/delete[0-9]+/);
     if (match != null) {
         const amount = match[0].split("delete")[1];
         if (Number(coins.amount) >= Number(amount)) {
